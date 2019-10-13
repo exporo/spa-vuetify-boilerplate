@@ -20,7 +20,8 @@ Tip: You will find your audience key [here](https://manage.auth0.com/#/apis)
 {
   "provider" : "oidcClient",
   "domain": "xyxyx.onelogin.com",
-  "clientId": "xyxyxyxz"
+  "clientId": "xyxyxyxz",
+  "audience": ""
 }
 ```
 
