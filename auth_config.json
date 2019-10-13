@@ -1,0 +1,6 @@
+{
+  "provider" : "auth0",
+  "domain": "henriklippke.eu.auth0.com",
+  "clientId": "SqOFq5SZsQS6sePX31U7ax6W3ONQW0EJ",
+  "audience": "https://localhost:8080"
+}
