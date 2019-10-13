@@ -61,7 +61,7 @@ export default ({
                 response_type: 'token',
                 domain: options.domain,
                 client_id: options.clientId,
-                //audience: options.audience,
+                audience: options.audience,
                 redirect_uri: redirectUri,
                 scope: 'openid profile id_token access_token',
             })

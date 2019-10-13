@@ -10,9 +10,10 @@
   "provider" : "auth0",
   "domain": "yxyxxyx.eu.auth0.com",
   "clientId": "xyxyxyxz"
+  "audience": "https://yyyyy.eu.auth0.com/api/v2/"
 }
-
 ````
+Tip: You will find your audience key [here](https://manage.auth0.com/#/apis) 
 
 ###OneLogin:
 ```
@@ -25,5 +26,10 @@
 
 
 ## API Repositories
+./src/repositories/Repository.js
 ./src/repositories/UserRepository.js
+
+
+## Generic form builder
+../src/components/helper/Form2.vue
 
