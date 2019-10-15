@@ -9,7 +9,7 @@ jobs:
     - attach_workspace:
         at: ~/sls
     - run:
-        name: Install Infrastructure NPM
+        name: Install NPM
         command: |
           cd application
           npm install
