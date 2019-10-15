@@ -23,7 +23,9 @@ jobs:
         at: ~/sls
     - run:
         name: run tests
-        command: npm run tests
+        command: |
+          cd application
+          npm run tests
 
   deploy:
     working_directory: ~/sls
