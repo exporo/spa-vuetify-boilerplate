@@ -10,10 +10,10 @@ jobs:
         at: ~/sls
     - run:
         name: Install Infrastructure NPM
-          command: |
-            cd application
-            npm install
-            npm run build
+        command: |
+          cd application
+          npm install
+          npm run build
   test:
     working_directory: ~/sls
     docker:
@@ -23,7 +23,7 @@ jobs:
         at: ~/sls
     - run:
         name: run tests
-          command: npm run tests
+        command: npm run tests
 
   deploy:
     working_directory: ~/sls
@@ -33,14 +33,14 @@ jobs:
     - attach_workspace:
         at: ~/sls
     - name: Deploy Cloudformation
-        command: |
-        npm install -g cfn-create-or-update
-        cfn-create-or-update --stack-name test --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"spa.dev.exporo.de\"
+      command: |
+      npm install -g cfn-create-or-update
+      cfn-create-or-update --stack-name test --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"spa.dev.exporo.de\"
     - name: Deploy Preview
-        command: |
-          cd application
-          aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/$CIRCLE_BRANCH
-        no_output_timeout: 2m
+      command: |
+        cd application
+        aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/$CIRCLE_BRANCH
+      no_output_timeout: 2m
 
   deployProd:
     working_directory: ~/sls
