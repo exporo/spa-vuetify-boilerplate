@@ -34,8 +34,8 @@ jobs:
         at: ~/sls
     - name: Deploy Cloudformation
       command: |
-      npm install -g cfn-create-or-update
-      cfn-create-or-update --stack-name test --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"spa.dev.exporo.de\"
+        npm install -g cfn-create-or-update
+        cfn-create-or-update --stack-name test --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"spa.dev.exporo.de\"
     - name: Deploy Preview
       command: |
         cd application
