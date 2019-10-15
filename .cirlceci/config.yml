@@ -1,0 +1,80 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/sls
+    docker:
+    - image: registry.gitlab.com/exporo/circleci-stretch-node-awscli:latest
+    steps:
+    - checkout
+    - attach_workspace:
+        at: ~/sls
+    - run:
+        name: Install Infrastructure NPM
+        command: |
+          cd application
+          npm install
+          npm run build
+  test:
+    working_directory: ~/sls
+    docker:
+    - image: registry.gitlab.com/exporo/circleci-stretch-node-awscli:latest
+    steps:
+    - attach_workspace:
+        at: ~/sls
+    - run:
+        name: run tests
+        command: npm run tests
+
+  deploy:
+    working_directory: ~/sls
+    docker:
+    - image: registry.gitlab.com/exporo/circleci-stretch-node-awscli:latest
+    steps:
+    - attach_workspace:
+        at: ~/sls
+    - name: Deploy Cloudformation
+        command: |
+        npm install -g cfn-create-or-update
+        cfn-create-or-update --stack-name test --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"spa.dev.exporo.de\"
+    - name: Deploy Preview
+        command: cd application && aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/$CIRCLE_BRANCH
+        no_output_timeout: 2m
+
+  deployProd:
+    working_directory: ~/sls
+    docker:
+    - image: registry.gitlab.com/exporo/circleci-stretch-node-awscli:latest
+    steps:
+    - attach_workspace:
+        at: ~/sls
+    - name: Deploy Prod
+        command: cd application && aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/production
+        no_output_timeout: 2m
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+    - build
+    - test:
+        requires:
+        - build
+
+    - deploy:
+        requires:
+        - test
+
+    - hold:
+        type: approval
+        requires:
+        - deploy
+        filters:
+          branches:
+            only: master
+
+    - deployProd:
+        requires:
+        - hold
+        filters:
+          branches:
+            only: master

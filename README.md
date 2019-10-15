@@ -1,5 +1,13 @@
 # exporo spa vuetify
 
+## Local Setup 
+TODO Docker Contaier is missing
+```
+cd application
+npm run install
+npm run dev
+```
+
 ## Auth provider
 ./auth.config.json
 
