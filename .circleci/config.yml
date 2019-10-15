@@ -50,10 +50,10 @@ jobs:
     - attach_workspace:
         at: ~/sls
     - name: Deploy Prod
-        command: |
-          cd application
-          aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/production
-        no_output_timeout: 2m
+      command: |
+        cd application
+        aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/production
+      no_output_timeout: 2m
 
 workflows:
   version: 2
