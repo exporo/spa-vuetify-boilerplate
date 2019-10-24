@@ -20,7 +20,7 @@ Resources:
   WebsiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref 'BucketName'
+      BucketName: !Ref "AWS::StackName"
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
@@ -29,7 +29,7 @@ Resources:
   WebsiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: !Ref "AWS::StackName"
+      Bucket: !Ref 'WebsiteBucket'
       PolicyDocument:
         Statement:
         - Sid: PublicReadForGetBucketObjects
