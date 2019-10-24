@@ -39,12 +39,12 @@ jobs:
         name: Deploy Cloudformation
         command: |
           sudo npm install -g cfn-create-or-update
-          cfn-create-or-update --stack-name test --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"spa.dev.exporo.de\"
+          cfn-create-or-update --stack-name exporo-tax-spa --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"tax.exporo.de\" ParameterKey=BucketName,ParameterValue=\"exporo-tax-spa\" ParameterKey=PreviewDomainName,ParameterValue=\"dev.spa.tax.exporo.de\" ParameterKey=ProductionDomainName,ParameterValue=\"spa.tax.exporo.de\" ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:us-east-1:272622217644:certificate/6388db86-a557-4d7d-86a3-51b13ac9f7fc" --region eu-central-1
     - run:
         name: Deploy Preview
         command: |
           cd application
-          aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/$CIRCLE_BRANCH
+          aws s3 cp --recursive ./application/dist/ s3://exporo-webapp/build-artifacts/$CIRCLE_BRANCH
         no_output_timeout: 2m
 
   deployProd:
