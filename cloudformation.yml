@@ -7,16 +7,7 @@ Parameters:
     Description: The DNS name of an existing Amazon Route 53 hosted zone e.g. jevsejev.io
     AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
     ConstraintDescription: must be a valid DNS zone name.
-  BucketName:
-    Type: String
-    Description: The BucketName
-    AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
-  ProductionDomainName:
-    Type: String
-    Description: The full domain name e.g. www.jevsejev.io
-    AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
-    ConstraintDescription: must be a valid DNS zone name.
-  PreviewDomainName:
+  CFDomainName:
     Type: String
     Description: The full domain name e.g. www.jevsejev.io
     AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
@@ -64,7 +55,7 @@ Resources:
         HttpVersion: 'http2'
         DefaultRootObject: index.html
         Aliases:
-        - !Ref 'ProductionDomainName'
+        - !Ref 'CFDomainName'
         DefaultCacheBehavior:
           AllowedMethods:
           - GET
@@ -85,55 +76,11 @@ Resources:
     Properties:
       HostedZoneName: !Join ['', [!Ref 'DomainName', .]]
       RecordSets:
-      - Name: !Ref 'ProductionDomainName'
+      - Name: !Ref 'CFDomainName'
         Type: A
         AliasTarget:
           HostedZoneId: Z2FDTNDATAQYW2
           DNSName: !GetAtt [WebsiteCloudfront, DomainName]
-  PreviewWebsiteCloudfront:
-    Type: AWS::CloudFront::Distribution
-    DependsOn:
-    - WebsiteBucket
-    Properties:
-      DistributionConfig:
-        Comment: Cloudfront Distribution pointing to S3 bucket
-        Origins:
-        - DomainName: !Select [2, !Split ["/", !GetAtt WebsiteBucket.WebsiteURL]]
-          Id: S3Origin
-          CustomOriginConfig:
-            HTTPPort: '80'
-            HTTPSPort: '443'
-            OriginProtocolPolicy: http-only
-        Enabled: true
-        HttpVersion: 'http2'
-        DefaultRootObject: index.html
-        Aliases:
-        - !Ref 'PreviewDomainName'
-        DefaultCacheBehavior:
-          AllowedMethods:
-          - GET
-          - HEAD
-          Compress: true
-          TargetOriginId: S3Origin
-          ForwardedValues:
-            QueryString: true
-            Cookies:
-              Forward: none
-          ViewerProtocolPolicy: redirect-to-https
-        PriceClass: PriceClass_All
-        ViewerCertificate:
-          AcmCertificateArn: !Ref AcmCertificateArn
-          SslSupportMethod: sni-only
-  PreviewWebsiteDNSName:
-    Type: AWS::Route53::RecordSetGroup
-    Properties:
-      HostedZoneName: !Join ['', [!Ref 'DomainName', .]]
-      RecordSets:
-      - Name: !Ref 'PreviewDomainName'
-        Type: A
-        AliasTarget:
-          HostedZoneId: Z2FDTNDATAQYW2
-          DNSName: !GetAtt [PreviewWebsiteCloudfront, DomainName]
 Outputs:
   BucketName:
     Value: !Ref 'WebsiteBucket'
@@ -141,9 +88,3 @@ Outputs:
   CloudfrontEndpoint:
     Value: !GetAtt [WebsiteCloudfront, DomainName]
     Description: Endpoint for Cloudfront distribution
-  PreviewCloudfrontEndpoint:
-    Value: !GetAtt [PreviewWebsiteCloudfront, DomainName]
-    Description: Endpoint for Cloudfront distribution
-  FullDomain:
-    Value: !Ref 'ProductionDomainName'
-    Description: Full DomainName

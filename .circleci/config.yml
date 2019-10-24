@@ -46,16 +46,15 @@ jobs:
     - run:
         name: Deploy Cloudformation
         command: >
-          cfn-create-or-update --stack-name exporo-spa-vuetify --wait --template-body file://cloudformation.yml --region eu-central-1 --parameters
+          cfn-create-or-update --stack-name exporo-spa-vuetify-prev --wait --template-body file://cloudformation.yml --region eu-central-1 --parameters
           ParameterKey=DomainName,ParameterValue=\"techdev2.exporo.de\"
-          ParameterKey=PreviewDomainName,ParameterValue=\"spa-dev.techdev2.exporo.de\"
-          ParameterKey=ProductionDomainName,ParameterValue=\"spa.techdev2.exporo.de\"
+          ParameterKey=CFDomainName,ParameterValue=\"spa-dev.techdev2.exporo.de\"
           ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:eu-central-1:532306144703:certificate/6763af47-3128-4416-8840-d866a6e800cb\"
     - run:
         name: Deploy Preview
         command: |
           cd application
-          aws s3 cp --recursive ./application/dist/ s3://exporo-webapp/build-artifacts/$CIRCLE_BRANCH
+          aws s3 cp --recursive ./dist/ s3://exporo-spa-vuetify-prev/build-artifacts/$CIRCLE_BRANCH
         no_output_timeout: 2m
 
   deployProd:
@@ -65,10 +64,21 @@ jobs:
     steps:
     - attach_workspace:
         at: ~/sls
+    - run:
+        name: Install cfn-create-or-update
+        command: |
+          sudo npm install -g cfn-create-or-update
+    - run:
+        name: Deploy Cloudformation
+        command: >
+          cfn-create-or-update --stack-name exporo-spa-vuetify --wait --template-body file://cloudformation.yml --region eu-central-1 --parameters
+          ParameterKey=DomainName,ParameterValue=\"techdev2.exporo.de\"
+          ParameterKey=CFDomainName,ParameterValue=\"spa.techdev2.exporo.de\"
+          ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:eu-central-1:532306144703:certificate/6763af47-3128-4416-8840-d866a6e800cb\"
     - name: Deploy Prod
       command: |
         cd application
-        aws s3 cp --recursive ./application/dist/ s3://exporo-webapp/build-artifacts/production
+        aws s3 cp --recursive ./dist/ s3://exporo-spa-vuetify/build-artifacts/$CIRCLE_BRANCH
       no_output_timeout: 2m
 
 workflows:
