@@ -50,7 +50,7 @@ jobs:
           ParameterKey=DomainName,ParameterValue=\"techdev2.exporo.de\"
           ParameterKey=PreviewDomainName,ParameterValue=\"spa-dev.techdev2.exporo.de\"
           ParameterKey=ProductionDomainName,ParameterValue=\"spa.techdev2.exporo.de\"
-          ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:us-east-1:532306144703:certificate/fc32687d-1eb1-421e-8af3-0fd20c0246d9\"
+          ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:eu-central-1:532306144703:certificate/6763af47-3128-4416-8840-d866a6e800cb\"
     - run:
         name: Deploy Preview
         command: |
