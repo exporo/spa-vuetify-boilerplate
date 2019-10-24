@@ -54,7 +54,7 @@ jobs:
         name: Deploy Preview
         command: |
           cd application
-          aws s3 cp --recursive ./dist/ s3://exporo-spa-vuetify-prev/$CIRCLE_BRANCH
+          aws s3 sync --delete --acl public-read ./dist/ s3://exporo-spa-vuetify-prev/$CIRCLE_BRANCH
         no_output_timeout: 2m
 
   deployProd:
@@ -78,7 +78,7 @@ jobs:
     - name: Deploy Prod
       command: |
         cd application
-        aws s3 cp --recursive ./dist/ s3://exporo-spa-vuetify/
+        aws s3 sync --delete --acl public-read ./dist/ s3://exporo-spa-vuetify/
       no_output_timeout: 2m
 
 workflows:

@@ -61,6 +61,9 @@ Resources:
           - GET
           - HEAD
           Compress: true
+          DefaultTTL: 0
+          MinTTL: 0
+          MaxTTL: 10
           TargetOriginId: S3Origin
           ForwardedValues:
             QueryString: true
