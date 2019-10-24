@@ -35,11 +35,13 @@ jobs:
     steps:
     - attach_workspace:
         at: ~/sls
-    - name: Deploy Cloudformation
+    - run:
+      name: Deploy Cloudformation
       command: |
         npm install -g cfn-create-or-update
         cfn-create-or-update --stack-name test --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"spa.dev.exporo.de\"
-    - name: Deploy Preview
+    - run:
+      name: Deploy Preview
       command: |
         cd application
         aws s3 cp --recursive ./dist/ s3://exporo-webapp/build-artifacts/$CIRCLE_BRANCH
