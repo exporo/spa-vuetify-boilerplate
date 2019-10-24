@@ -36,10 +36,13 @@ jobs:
     - attach_workspace:
         at: ~/sls
     - run:
-        name: Deploy Cloudformation
+        name: Install cfn-create-or-update
         command: |
           sudo npm install -g cfn-create-or-update
-          cfn-create-or-update --stack-name exporo-spa-vuetify --template-body file://./cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"techdev2.exporo.de\" ParameterKey=BucketName,ParameterValue=\"exporo-spa-vuetify\" ParameterKey=PreviewDomainName,ParameterValue=\"dev.spa.techdev2.exporo.de\" ParameterKey=ProductionDomainName,ParameterValue=\"spa.techdev2.exporo.de\" ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:us-east-1:532306144703:certificate/fc32687d-1eb1-421e-8af3-0fd20c0246d9\" --region eu-central-1
+    - run:
+        name: Deploy Cloudformation
+        command: |
+          cfn-create-or-update --stack-name exporo-spa-vuetify --template-body file://cloudformation.yml --parameters ParameterKey=DomainName,ParameterValue=\"techdev2.exporo.de\" ParameterKey=BucketName,ParameterValue=\"exporo-spa-vuetify\" ParameterKey=PreviewDomainName,ParameterValue=\"dev.spa.techdev2.exporo.de\" ParameterKey=ProductionDomainName,ParameterValue=\"spa.techdev2.exporo.de\" ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:us-east-1:532306144703:certificate/fc32687d-1eb1-421e-8af3-0fd20c0246d9\" --region eu-central-1
     - run:
         name: Deploy Preview
         command: |
