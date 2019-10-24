@@ -77,7 +77,8 @@ jobs:
           ParameterKey=CFDomainName,ParameterValue=\"spa.techdev2.exporo.de\"
           ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:us-east-1:532306144703:certificate/fc32687d-1eb1-421e-8af3-0fd20c0246d9\"
         no_output_timeout: 40m
-    - name: Deploy Prod
+    - run:
+        name: Deploy Prod
         command: |
           cd application
           aws s3 sync --delete --acl public-read ./dist/ s3://exporo-spa-vuetify/
