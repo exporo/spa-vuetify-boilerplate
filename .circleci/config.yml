@@ -44,12 +44,13 @@ jobs:
         command: |
           sudo npm install -g cfn-create-or-update
     - run:
-        name: Deploy Cloudformation
+        name: Deploy Prev Cloudformation
         command: >
           cfn-create-or-update --stack-name exporo-spa-vuetify-prev --wait --template-body file://cloudformation.yml --region eu-central-1 --parameters
           ParameterKey=DomainName,ParameterValue=\"techdev2.exporo.de\"
           ParameterKey=CFDomainName,ParameterValue=\"spa-dev.techdev2.exporo.de\"
           ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:us-east-1:532306144703:certificate/fc32687d-1eb1-421e-8af3-0fd20c0246d9\"
+        no_output_timeout: 40m
     - run:
         name: Deploy Preview
         command: |
@@ -69,17 +70,18 @@ jobs:
         command: |
           sudo npm install -g cfn-create-or-update
     - run:
-        name: Deploy Cloudformation
+        name: Deploy Prod Cloudformation
         command: >
           cfn-create-or-update --stack-name exporo-spa-vuetify --wait --template-body file://cloudformation.yml --region eu-central-1 --parameters
           ParameterKey=DomainName,ParameterValue=\"techdev2.exporo.de\"
           ParameterKey=CFDomainName,ParameterValue=\"spa.techdev2.exporo.de\"
           ParameterKey=AcmCertificateArn,ParameterValue=\"arn:aws:acm:us-east-1:532306144703:certificate/fc32687d-1eb1-421e-8af3-0fd20c0246d9\"
+        no_output_timeout: 40m
     - name: Deploy Prod
-      command: |
-        cd application
-        aws s3 sync --delete --acl public-read ./dist/ s3://exporo-spa-vuetify/
-      no_output_timeout: 2m
+        command: |
+          cd application
+          aws s3 sync --delete --acl public-read ./dist/ s3://exporo-spa-vuetify/
+        no_output_timeout: 2m
 
 workflows:
   version: 2
