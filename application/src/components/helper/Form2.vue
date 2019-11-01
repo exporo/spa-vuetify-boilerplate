@@ -24,10 +24,14 @@
                         :text="text"
                 >
 
+
+                    <p class="error red" v-for="error in customErrors">
+                        {{ error }}
+                    </p>
+
                     <v-form
                             ref="form"
                     >
-                        <!-- form wrapper -->
                         <v-row>
                             <template v-for="item in fields">
                                 <v-col cols="6" v-if="item.type === 'text'">
@@ -61,16 +65,15 @@
 <script>
     export default {
         name: 'Form2',
-        data: {
-            successful: false
-        },
-        data () {
+        data() {
             return {
+                customErrors: [],
                 successful: false
             }
         },
         methods: {
-            onSave () {
+            onSave() {
+                this.customErrors = [];
                 this.$refs.form.resetValidation();
                 this.$refs.form.validate();
 
@@ -80,7 +83,11 @@
                     })
                     .catch((error) => {
                         error.response.data.forEach((item) => {
-                            this.errors[item.context.key] = item.message;
+                            if (this.fields.some(e => e.name === item.context.key)) {
+                                this.errors[item.context.key] = item.message;
+                            } else {
+                                this.customErrors.push(item.message);
+                            }
                         })
                     })
             },
