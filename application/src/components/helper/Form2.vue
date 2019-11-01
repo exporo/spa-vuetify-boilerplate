@@ -9,6 +9,16 @@
         >
             <v-col cols="12">
                 <material-card
+                        v-if="successful"
+                        color="green"
+                        title="Yeah"
+                        text="Successful created"
+                >
+
+                </material-card>
+
+                <material-card
+                        v-if="!successful"
                         color="green"
                         :title="title"
                         :text="text"
@@ -51,13 +61,28 @@
 <script>
     export default {
         name: 'Form2',
+        data: {
+            successful: false
+        },
+        data () {
+            return {
+                successful: false
+            }
+        },
         methods: {
             onSave () {
-                console.log('updated model', this.model)
-                this.$refs.form.resetValidation()
-                this.$refs.form.validate()
-                this.errors.last_name = 'My Error2'
-                callback()
+                this.$refs.form.resetValidation();
+                this.$refs.form.validate();
+
+                this.callback()
+                    .then((response) => {
+                        this.successful = true;
+                    })
+                    .catch((error) => {
+                        error.response.data.forEach((item) => {
+                            this.errors[item.context.key] = item.message;
+                        })
+                    })
             },
         },
         props: ['title', 'text', 'fields', 'model', 'errors', 'callback']

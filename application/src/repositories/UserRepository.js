@@ -9,8 +9,8 @@ export default {
     show (id) {
         return Repository.get(`${resource}`)
     },
-    create () {
-        return Repository.post(`${resource}`)
+    create (payload) {
+        return Repository.post(`${resource}`, payload)
     },
     update (id) {
         return Repository.put(`${resource}`)

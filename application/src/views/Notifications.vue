@@ -7,12 +7,18 @@
 <script>
 
     import Form2 from '../components/helper/Form2'
+    import {RepositoryFactory} from '../repositories/RepositoryFactory'
+    const UserRepository = RepositoryFactory.get('user');
 
     export default {
         comments: {
             Form2,
         },
-
+        methods: {
+            async submit() {
+                await UserRepository.create(this.model);
+            }
+        },
         data: () => ({
             fields: [
                 {
